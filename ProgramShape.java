@@ -42,9 +42,13 @@ public class ProgramShape {
 
             for (Shape sh : shapes)
                 if (Objects.equals(sh.name(), "Круг")) {
-                    System.out.println(sh.name() + ". Площадь = " + sh.area() + ". Длина окружности = " + sh.circleLength());
-                } else {
-                    System.out.println(sh.name() + ". Площадь = " + sh.area() + ". Периметр = " + sh.perimeter());
+                    System.out.println(sh.name() + ". Площадь = " + sh.area() + ". Длина окружности = " + Circle.circleLength());
+                } else if (Objects.equals(sh.name(), "Квадрат")) {
+                    System.out.println(sh.name() + ". Площадь = " + sh.area() + ". Периметр = " + Square.perimeter());
+                } else if (Objects.equals(sh.name(), "Прямоугольник")) {
+                    System.out.println(sh.name() + ". Площадь = " + sh.area() + ". Периметр = " + Rectangle.perimeter());
+                } else if (Objects.equals(sh.name(), "Треугольник")) {
+                    System.out.println(sh.name() + ". Площадь = " + sh.area() + ". Периметр = " + Triangle.perimeter());
                 }
         } catch (TriangleException | RectangleException | SquareException | CircleException e) {
             System.err.println(e.getMessage());

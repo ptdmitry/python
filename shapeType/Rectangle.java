@@ -1,16 +1,16 @@
 package ArchitecturePO.Lesson3.Shape.shapeType;
 
 import ArchitecturePO.Lesson3.Shape.exceptions.RectangleException;
-import ArchitecturePO.Lesson3.Shape.interFaceAction.IRectangleable;
+import ArchitecturePO.Lesson3.Shape.interFaceAction.IPolygonable;
 import ArchitecturePO.Lesson3.Shape.interFaceAction.Shape;
 
-public class Rectangle extends Shape implements IRectangleable {
-    private final int length;
-    private final int width;
+public class Rectangle extends Shape implements IPolygonable {
+    private static int length;
+    private static int width;
 
     public Rectangle(int length, int width) {
-        this.length = length;
-        this.width = width;
+        Rectangle.length = length;
+        Rectangle.width = width;
         if (length <= 0 || width <= 0) {
             throw new RectangleException();
         }
@@ -21,10 +21,9 @@ public class Rectangle extends Shape implements IRectangleable {
     }
     @Override
     public int area() {
-        return IRectangleable.super.IArea(length, width);
+        return IPolygonable.super.IArea(length, width);
     }
-    @Override
-    public int perimeter() {
-        return IRectangleable.super.IPerimeter(length, width);
+    public static int perimeter() {
+        return IPolygonable.IPerimeter(length, width);
     }
 }
