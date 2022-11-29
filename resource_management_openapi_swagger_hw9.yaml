@@ -1,0 +1,1068 @@
+openapi: 3.0.3
+info:
+  title: Swagger Web-Resources Management - OpenAPI 3.0
+  description: |-
+    This is a sample Web-Resources Management Server based on the OpenAPI 3.0 specification.
+    
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://wrm.swagger.io/api/v3
+tags:
+  - name: cpu
+    description: Everything about our processors
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+  - name: ram
+    description: Everything about our random-access memory
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+  - name: rom
+    description: Everything about our read-only memory 
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+  - name: ip
+    description: Everything about our IP-addresses 
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+  - name: os
+    description: Everything about our operating systems
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+paths:
+  /cpu:
+    put:
+      tags:
+        - cpu
+      summary: Update an existing CPU
+      description: Update an existing CPU by ID
+      operationId: update_cpu
+      requestBody:
+        description: Update an existent CPU in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CPU'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/CPU'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CPU'
+        required: true
+      responses:
+        '200':
+          description: The request to put a CPU has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPU'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CPU'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: CPU not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:cpu
+            - read:cpu
+    post:
+      tags:
+        - cpu
+      summary: Add a new CPU to the store
+      description: Add a new CPU to the store
+      operationId: add_cpu
+      requestBody:
+        description: Create a new CPU in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CPU'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/CPU'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CPU'
+        required: true
+      responses:
+        '200':
+          description: The request to post a CPU has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPU'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CPU'
+        '404':
+          description: CPU not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:cpu
+            - read:cpu
+  /cpu/find_by_status:
+    get:
+      tags:
+        - cpu
+      summary: Finds processors by status
+      description: Multiple status values can be provided with comma separated strings
+      operationId: find_cpu_by_status
+      parameters:
+        - name: status
+          in: query
+          description: Status values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: available
+            enum:
+              - available
+              - pending
+              - sold
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CPU'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CPU'
+        '400':
+          description: Invalid status value
+        '404':
+          description: CPU not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:cpu
+            - read:cpu
+  /cpu/{cpuid}:
+    get:
+      tags:
+        - cpu
+      summary: Find a list of processors
+      description: Returns a list CPU
+      operationId: get_list_cpu
+      parameters:
+        - name: cpuid
+          in: path
+          description: A list of CPU to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CPU'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CPU'
+        '400':
+          description: Invalid ID value
+        '404':
+          description: CPU with this ID was not found
+        '503':
+          description: Service Unavailable
+      security:
+        - api_key: []
+        - webstore_auth:
+            - write:cpu
+            - read:cpu
+    delete:
+      tags:
+        - cpu
+      summary: Delete a CPU
+      description: Delete a CPU
+      operationId: delete_cpu
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: cpuid
+          in: path
+          description: CPU ID to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid CPU value
+        '500':
+          description: Internal Server Error
+      security:
+        - webstore_auth:
+            - write:cpu
+            - read:cpu
+  /ram:
+    put:
+      tags:
+        - ram
+      summary: Update an existing RAM
+      description: Update an existing RAM by ID
+      operationId: update_ram
+      requestBody:
+        description: Update an existent RAM in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RAM'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/RAM'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RAM'
+        required: true
+      responses:
+        '200':
+          description: The request to put a RAM has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RAM'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/RAM'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: RAM not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:ram
+            - read:ram
+    post:
+      tags:
+        - ram
+      summary: Add a new RAM to the store
+      description: Add a new RAM to the store
+      operationId: add_ram
+      requestBody:
+        description: Create a new RAM in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RAM'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/RAM'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RAM'
+        required: true
+      responses:
+        '200':
+          description: The request to post a RAM has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RAM'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/RAM'
+        '404':
+          description: RAM not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:ram
+            - read:ram
+  /ram/find_by_status:
+    get:
+      tags:
+        - ram
+      summary: Finds random-access memory by status
+      description: Multiple status values can be provided with comma separated strings
+      operationId: find_ram_by_status
+      parameters:
+        - name: status
+          in: query
+          description: Status values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: available
+            enum:
+              - available
+              - pending
+              - sold
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RAM'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RAM'
+        '400':
+          description: Invalid status value
+        '404':
+          description: RAM not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:ram
+            - read:ram
+  /ram/{ramid}:
+    get:
+      tags:
+        - ram
+      summary: Find random-access memory by ID
+      description: Returns a single RAM
+      operationId: get_ram_by_id
+      parameters:
+        - name: ramid
+          in: path
+          description: ID of RAM to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RAM'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/RAM'
+        '400':
+          description: Invalid ID value
+        '404':
+          description: RAM with this ID was not found
+        '503':
+          description: Service Unavailable
+      security:
+        - api_key: []
+        - webstore_auth:
+            - write:ram
+            - read:ram
+    delete:
+      tags:
+        - ram
+      summary: Delete a RAM
+      description: Delete a RAM
+      operationId: delete_ram
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: ramid
+          in: path
+          description: RAM ID to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid RAM value
+        '500':
+          description: Internal Server Error
+      security:
+        - webstore_auth:
+            - write:ram
+            - read:ram
+  /rom:
+    put:
+      tags:
+        - rom
+      summary: Update an existing ROM
+      description: Update an existing ROM by ID
+      operationId: update_rom
+      requestBody:
+        description: Update an existent ROM in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ROM'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ROM'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ROM'
+        required: true
+      responses:
+        '200':
+          description: The request to put a ROM has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ROM'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ROM'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: ROM not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:rom
+            - read:rom
+    post:
+      tags:
+        - rom
+      summary: Add a new ROM to the store
+      description: Add a new ROM to the store
+      operationId: add_rom
+      requestBody:
+        description: Create a new ROM in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ROM'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ROM'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ROM'
+        required: true
+      responses:
+        '200':
+          description: The request to post a ROM has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ROM'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ROM'
+        '404':
+          description: ROM not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:rom
+            - read:rom
+  /rom/find_by_status:
+    get:
+      tags:
+        - rom
+      summary: Finds read-only memory by status
+      description: Multiple status values can be provided with comma separated strings
+      operationId: find_rom_by_status
+      parameters:
+        - name: status
+          in: query
+          description: Status values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: available
+            enum:
+              - available
+              - pending
+              - sold
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ROM'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ROM'
+        '400':
+          description: Invalid status value
+        '404':
+          description: ROM not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:rom
+            - read:rom
+  /rom/{romid}:
+    get:
+      tags:
+        - rom
+      summary: Find read-only memory by ID
+      description: Returns a single ROM
+      operationId: get_rom_by_id
+      parameters:
+        - name: romid
+          in: path
+          description: ID of ROM to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ROM'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ROM'
+        '400':
+          description: Invalid ID value
+        '404':
+          description: ROM with this ID was not found
+        '503':
+          description: Service Unavailable
+      security:
+        - api_key: []
+        - webstore_auth:
+            - write:rom
+            - read:rom
+    delete:
+      tags:
+        - rom
+      summary: Delete a ROM
+      description: Delete a ROM
+      operationId: delete_rom
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: romid
+          in: path
+          description: ROM ID to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid ROM value
+        '500':
+          description: Internal Server Error
+      security:
+        - webstore_auth:
+            - write:rom
+            - read:rom
+  /ip:
+    put:
+      tags:
+        - ip
+      summary: Update an existing IP
+      description: Update an existing IP by ID
+      operationId: update_ip
+      requestBody:
+        description: Update an existent IP in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IP'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/IP'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IP'
+        required: true
+      responses:
+        '200':
+          description: The request to put a IP has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IP'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IP'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: IP not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:ip
+            - read:ip
+    post:
+      tags:
+        - ip
+      summary: Add a new IP to the store
+      description: Add a new IP to the store
+      operationId: add_ip
+      requestBody:
+        description: Create a new IP in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IP'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/IP'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IP'
+        required: true
+      responses:
+        '200':
+          description: The request to post a IP has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IP'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IP'
+        '404':
+          description: IP not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:ip
+            - read:ip
+  /ip/find_by_status:
+    get:
+      tags:
+        - ip
+      summary: Finds IP by status
+      description: Multiple status values can be provided with comma separated strings
+      operationId: find_ip_by_status
+      parameters:
+        - name: status
+          in: query
+          description: Status values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: available
+            enum:
+              - available
+              - pending
+              - sold
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IP'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IP'
+        '400':
+          description: Invalid status value
+        '404':
+          description: IP not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:ip
+            - read:ip
+  /ip/{ipid}:
+    get:
+      tags:
+        - ip
+      summary: Find IP by ID
+      description: Returns a single IP
+      operationId: get_ip_by_id
+      parameters:
+        - name: ipid
+          in: path
+          description: ID of IP to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IP'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IP'
+        '400':
+          description: Invalid ID value
+        '404':
+          description: IP with this ID was not found
+        '503':
+          description: Service Unavailable
+      security:
+        - api_key: []
+        - webstore_auth:
+            - write:ip
+            - read:ip
+    delete:
+      tags:
+        - ip
+      summary: Delete a IP
+      description: Delete a IP
+      operationId: delete_ip
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: ipid
+          in: path
+          description: IP ID to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid IP value
+        '500':
+          description: Internal Server Error
+      security:
+        - webstore_auth:
+            - write:ip
+            - read:ip
+  /os:
+    put:
+      tags:
+        - os
+      summary: Update an existing operating system
+      description: Update an existing operating system by ID
+      operationId: update_os
+      requestBody:
+        description: Update an existent operating system in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OS'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/OS'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OS'
+        required: true
+      responses:
+        '200':
+          description: The request to put a OS has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OS'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OS'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: OS not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:os
+            - read:os
+    post:
+      tags:
+        - os
+      summary: Add a new operating system to the store
+      description: Add a new operating system to the store
+      operationId: add_os
+      requestBody:
+        description: Create a new operating system in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OS'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/OS'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OS'
+        required: true
+      responses:
+        '200':
+          description: The request to post a OS has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OS'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OS'
+        '404':
+          description: OS not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webstore_auth:
+            - write:os
+            - read:os
+  /os/{osid}:
+    get:
+      tags:
+        - os
+      summary: Find operating system by ID
+      description: Returns a single OS
+      operationId: get_os_by_id
+      parameters:
+        - name: osid
+          in: path
+          description: ID of OS to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OS'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/OS'
+        '400':
+          description: Invalid ID value
+        '404':
+          description: OS with this ID was not found
+        '503':
+          description: Service Unavailable
+      security:
+        - api_key: []
+        - webstore_auth:
+            - write:os
+            - read:os
+    delete:
+      tags:
+        - os
+      summary: Delete an operating system
+      description: Delete an operating system
+      operationId: delete_os
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: osid
+          in: path
+          description: OS ID to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid OS value
+        '500':
+          description: Internal Server Error
+      security:
+        - webstore_auth:
+            - write:os
+            - read:os
+components:
+  schemas:
+    CPU:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 10
+        cpuid:
+          type: integer
+          format: int32
+          example: 200
+        name:
+          type: string
+          example: AMD Ryzen 5 5600X
+        socket:
+          type: string
+          example: AM4
+        processor_frequency:
+          type: string
+          example: 3700 MHz
+        memory_type:
+          type: string
+          example: DDR4
+      xml:
+        name: cpu
+    RAM:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 12
+        ramid:
+          type: integer
+          format: int32
+          example: 150
+        name:
+          type: string
+          example: Kingston Fury Black
+        memory_capacity:
+          type: string
+          example: 8 Gb
+        clock_frequency:
+          type: string
+          example: 3200 MHz
+        memory_type:
+          type: string
+          example: DDR4
+        form_factor:
+          type: string
+          example: DIMM
+      xml:
+        name: ram
+    ROM:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 15
+        romid:
+          type: integer
+          format: int32
+          example: 50
+        name:
+          type: string
+          example: Kingston A400 1.9 ТБ SATA SA400S37/1920G
+        memory_capacity:
+          type: string
+          example: 1.9 Tb
+        connector:
+          type: string
+          example: SATA
+        interface:
+          type: string
+          example: SATA 6 Gb/s
+        form_factor:
+          type: string
+          example: 2.5
+      xml:
+        name: rom
+    IP:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 8
+        ipid:
+          type: integer
+          format: int32
+          example: 20
+        name:
+          type: string
+          example: 192.168.1.2
+      xml:
+        name: ip
+    OS:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        osid:
+          type: integer
+          format: int32
+          example: 10
+        name:
+          type: string
+          example: Linux Ubuntu 22.04 LTS
+      xml:
+        name: os
+  requestBodies:
+    CPUArray:
+      description: List of CPU object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CPU'
+  securitySchemes:
+    webstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://wrm.swagger.io/oauth/authorize
+          scopes:
+            write:resource: modify resources in your account
+            read:resource: read your resources
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
