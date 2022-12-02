@@ -1,0 +1,653 @@
+openapi: 3.0.3
+info:
+  title: Swagger Robot Vacuum Cleaner - OpenAPI 3.0
+  description: |-
+    This is a sample Robot Vacuum Cleaner Server based on the OpenAPI 3.0 specification.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://rvc.swagger.io/api/v3
+tags:
+  - name: robot
+    description: Everything about our robots
+  - name: user
+    description: Operations about user
+  - name: cloud
+    description: Access to control the robot vacuum cleaner
+paths:
+  /robot:
+    put:
+      tags:
+        - robot
+      summary: Update an existing Robot
+      description: Update an existing Robot by ID
+      operationId: update_robot
+      requestBody:
+        description: Update an existent Robot
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Robot'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Robot'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Robot'
+        required: true
+      responses:
+        '200':
+          description: The request to put a Robot has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Robot not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webcloud_auth:
+            - write:robot
+            - read:robot
+    post:
+      tags:
+        - robot
+      summary: Add a new Robot
+      description: Add a new Robot
+      operationId: add_robot
+      requestBody:
+        description: Create a new Robot
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Robot'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Robot'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Robot'
+        required: true
+      responses:
+        '200':
+          description: The request to post a Robot has been accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '404':
+          description: Robot not found
+        '503':
+          description: Service Unavailable
+      security:
+        - webcloud_auth:
+            - write:robot
+            - read:robot
+  /robot/{robotid}:
+    get:
+      tags:
+        - robot
+      summary: Find a Robot
+      description: Returns a Robot
+      operationId: get_robot
+      parameters:
+        - name: robotid
+          in: path
+          description: A Robot to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '400':
+          description: Invalid ID value
+        '404':
+          description: Robot with this ID was not found
+        '503':
+          description: Service Unavailable
+      security:
+        - api_key: []
+        - webcloud_auth:
+            - write:robot
+            - read:robot
+    delete:
+      tags:
+        - robot
+      summary: Delete a Robot
+      description: Delete a Robot
+      operationId: delete_robot
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: robotid
+          in: path
+          description: Robot ID to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid Robot value
+        '500':
+          description: Internal Server Error
+      security:
+        - webcloud_auth:
+            - write:robot
+            - read:robot
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user
+      operationId: create_user
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+  /user/login:
+    get:
+      tags:
+        - user
+      summary: Logs user into the system
+      description: ''
+      operationId: login_user
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          headers:
+            X-Expires-After:
+              description: Date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username/password supplied
+  /user/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logout_user
+      parameters: []
+      responses:
+        default:
+          description: Successful operation
+  /user/{username}:
+    get:
+      tags:
+        - user
+      summary: Get user by user name
+      description: ''
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+    put:
+      tags:
+        - user
+      summary: Update user
+      description: This can only be done by the logged in user
+      operationId: update_user
+      parameters:
+        - name: username
+          in: path
+          description: The name that need to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user in the cloud
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: Successful operation
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user
+      operationId: delete_user
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+  /cloud/inventory:
+    get:
+      tags:
+        - cloud
+      summary: Returns information about robot
+      description: Returns a map of status codes to quantities
+      operationId: get_inventory
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+      security:
+        - api_key: []
+  /cloud/shedule:
+    post:
+      tags:
+        - cloud
+      summary: Place a day, time, room and the cleaning program for a cleaning
+      description: Place a new task in the cloud
+      operationId: place_task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shedule'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Shedule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Shedule'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shedule'
+        '405':
+          description: Invalid input
+  /cloud/service/{service_id}:
+    get:
+      tags:
+        - cloud
+      summary: Maintenance of the robot
+      description: Maintenance of the robot
+      operationId: get_service_id
+      parameters:
+        - name: service_id
+          in: path
+          description: ID of service that needs to be send
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Robot not found
+  /cloud/log:   
+    put:
+      tags:
+        - cloud
+      summary: Add logs
+      description: Add logs
+      operationId: update_log
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Log'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Log'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+        '405':
+          description: Invalid input
+  /cloud/log{delete_log}:
+    delete:
+      tags:
+        - cloud
+      summary: Delete log
+      description: This can only be done by the logged in user
+      operationId: delete_log
+      parameters:
+        - name: delete_log
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid log supplied
+        '404':
+          description: Log not found
+components:
+  schemas:
+    Robot:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 10
+        robotid:
+          type: integer
+          format: int32
+          example: 200
+        name:
+          type: string
+          example: Lydsto Robot Vacuum G2D
+        manufacturer:
+          type: string
+          example: Xiaomi
+        power:
+          type: string
+          example: 50 Watts
+        number_of_sensors:
+          type: integer
+          format: int32
+          example: 3
+        battery_capacity:
+          type: string
+          example: 2600 mAh
+        cleaning_time:
+          type: string
+          example: 120 min
+      xml:
+        name: robot
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: the_user
+        firstName:
+          type: string
+          example: Jora
+        lastName:
+          type: string
+          example: Ivanov
+        email:
+          type: string
+          example: jora_ivanov@email.com
+        password:
+          type: string
+          example: qwerty
+        phone:
+          type: string
+          example: 89112158936
+        user_status:
+          type: integer
+          description: User Status
+          format: int32
+          example: 1
+      xml:
+        name: user
+    Shedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        userId:
+          type: integer
+          format: int64
+          example: 19
+        robotId:
+          type: integer
+          format: int64
+          example: 27
+        quantity:
+          type: integer
+          format: int32
+          example: 7
+        day:
+          $ref: '#/components/schemas/Day'
+        time:
+          type: string
+          format: date-time
+        cleaning_program:
+          $ref: '#/components/schemas/CleaningProgram'
+        room:
+          $ref: '#/components/schemas/Room'
+        job_status:
+          type: boolean
+      xml:
+        name: shedule
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 10
+        robot_id:
+          type: integer
+          format: int64
+          example: 122
+        username:
+          type: string
+          example: Jora
+        service_address:
+          type: array
+          xml:
+            name: addresses
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Address'
+      xml:
+        name: service
+    Log:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1000
+        title:
+          type: string
+          example: Log
+        day:
+          $ref: '#/components/schemas/Day'
+        start_time:
+          type: string
+          format: date-time
+        stop_time:
+          type: string
+          format: date-time
+        room:
+          $ref: '#/components/schemas/Room'
+        cleaning_program:
+          $ref: '#/components/schemas/CleaningProgram'
+      xml:
+        name: log
+    CleaningProgram:
+      type: string
+      description: Select the type of cleaning
+      example: Dry
+      enum:
+        - Dry
+        - Soft
+        - Wet
+    Room:
+      type: string
+      description: Select the room for cleaning
+      example: Bedroom, Hall
+      enum:
+        - Bedroom
+        - Kitchen
+        - Bathroom
+        - Hall
+        - Children's room
+        - Balcony
+    Day:
+      type: string
+      description: Select the day for cleaning
+      example: Monday, Friday
+      enum:
+        - Monday
+        - Tuesday
+        - Wednesday
+        - Thursday
+        - Friday
+        - Saturday
+        - Sunday
+    Address:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Mi Service
+        street:
+          type: string
+          example: 437 Lenina
+        city:
+          type: string
+          example: Moscow
+      xml:
+        name: address
+  requestBodies:
+    CPUArray:
+      description: List of Robot object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Robot'
+  securitySchemes:
+    webcloud_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://rvc.swagger.io/oauth/authorize
+          scopes:
+            write:resource: change the data in your account
+            read:resource: read your data
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
